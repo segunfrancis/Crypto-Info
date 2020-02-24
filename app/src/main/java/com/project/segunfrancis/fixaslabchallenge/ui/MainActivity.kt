@@ -2,8 +2,11 @@ package com.project.segunfrancis.fixaslabchallenge.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.project.segunfrancis.fixaslabchallenge.R
 import com.project.segunfrancis.fixaslabchallenge.adapter.CryptoAdapter
 import com.project.segunfrancis.fixaslabchallenge.api.ApiBuilder
@@ -15,8 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var repository: CryptoRepository
     private lateinit var apiService: ApiService
 
@@ -24,32 +26,52 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        swipeRefresh.setOnRefreshListener(this)
+        swipeRefresh.isRefreshing = true
+
+        apiService = ApiBuilder.retrofit.create(ApiService::class.java)
+        repository = CryptoRepository(apiService)
+
+        getCryptoCoins()
+    }
+
+    /**
+     * Called when a swipe gesture triggers a refresh.
+     */
+    override fun onRefresh() {
+        getCryptoCoins()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_refresh) {
+            swipeRefresh.isRefreshing = true
+            getCryptoCoins()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun getCryptoCoins() {
         val adapter = CryptoAdapter()
         recyclerView.adapter = adapter
-
-        apiService =  ApiBuilder.retrofit.create(ApiService::class.java)
-        repository = CryptoRepository(apiService)
         repository.getCryptoCoins().enqueue(object : Callback<List<ApiResponse>?> {
             override fun onResponse(
                 call: Call<List<ApiResponse>?>,
                 response: Response<List<ApiResponse>?>
             ) {
                 adapter.setData(response.body())
-                hideProgressBar(progressBar)
+                swipeRefresh.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<ApiResponse>?>, t: Throwable) {
                 // Display cached data
-                hideProgressBar(progressBar)
+                swipeRefresh.isRefreshing = false
             }
         })
-    }
-
-    private fun hideProgressBar(progressBar: ProgressBar) {
-        progressBar.visibility = View.GONE
-    }
-
-    private fun showProgressBar(progressBar: ProgressBar) {
-        progressBar.visibility = View.VISIBLE
     }
 }

@@ -41,14 +41,14 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
             coin_symbol.text = item?.symbol
             when {
                 item?.percentageChange1Hour!!.toDouble() < 0 -> {
-                    coin_percent_change.text = item.percentageChange1Hour
+                    coin_percent_change.text = item.percentageChange1Hour.plus("%")
                     coin_percent_change.setTextColor(resources.getColor(R.color.textRed))
                 }
                 item.percentageChange1Hour.toDouble() > 0 -> {
-                    coin_percent_change.text = item.percentageChange1Hour
+                    coin_percent_change.text = item.percentageChange1Hour.plus("%")
                     coin_percent_change.setTextColor(resources.getColor(R.color.colorAccent))
                 }
-                else -> coin_percent_change.text = item.percentageChange1Hour
+                else -> coin_percent_change.text = item.percentageChange1Hour.plus("%")
             }
         }
     }
