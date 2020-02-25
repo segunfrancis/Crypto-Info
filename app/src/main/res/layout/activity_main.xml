@@ -19,10 +19,4 @@
             tools:context=".ui.MainActivity"
             tools:listitem="@layout/crypto_coin_list_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-<!--
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center" />-->
 </FrameLayout>
