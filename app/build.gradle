@@ -46,6 +46,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
+    androidTestImplementation "com.android.support.test:rules:1.0.2"
 
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
