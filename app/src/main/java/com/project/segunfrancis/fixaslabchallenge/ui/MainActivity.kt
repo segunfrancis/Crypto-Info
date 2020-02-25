@@ -2,6 +2,7 @@ package com.project.segunfrancis.fixaslabchallenge.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var repository: CryptoRepository
     private lateinit var apiService: ApiService
     private lateinit var cryptoViewModel: CryptoViewModel
+    private val TAG = MainActivity().localClassName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +78,21 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             override fun onFailure(call: Call<List<ApiResponse>?>, t: Throwable) {
-                // Display cached data
                 swipeRefresh.isRefreshing = false
-                Snackbar.make(
-                    requireViewById(R.id.root),
-                    "Displaying cached data, check network connection",
-                    Snackbar.LENGTH_LONG
-                ).show()
+                // Display cached data
+                cryptoViewModel.cryptoList.observe(this@MainActivity, Observer {
+                    if (it.isNullOrEmpty()) {
+                        displaySnackbar(getString(R.string.snackbar_error_message))
+                    } else {
+                        displaySnackbar(getString(R.string.snackbar_error_message_cache))
+                    }
+                })
+                Log.d(TAG, "onFailure: ${t.localizedMessage}")
             }
         })
+    }
+
+    private fun displaySnackbar(message: String) {
+        Snackbar.make(findViewById(R.id.root), message, Snackbar.LENGTH_LONG).show()
     }
 }

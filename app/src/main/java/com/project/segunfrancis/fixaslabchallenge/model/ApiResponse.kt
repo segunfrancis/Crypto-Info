@@ -3,7 +3,6 @@ package com.project.segunfrancis.fixaslabchallenge.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 /**
  * Created by SegunFrancis
@@ -16,4 +15,4 @@ data class ApiResponse(
     @SerializedName("symbol") val symbol: String,
     @SerializedName("price_usd") val priceUsd: String,
     @SerializedName("percent_change_1h") val percentageChange1Hour: String
-): Serializable
+)

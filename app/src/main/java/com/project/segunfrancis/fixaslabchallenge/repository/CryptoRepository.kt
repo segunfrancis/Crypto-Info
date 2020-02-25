@@ -11,8 +11,8 @@ import retrofit2.Call
  */
 
 class CryptoRepository() {
-    internal lateinit var apiService: ApiService
-    internal lateinit var cryptoDao: CryptoDao
+    private lateinit var apiService: ApiService
+    private lateinit var cryptoDao: CryptoDao
 
     constructor(apiService: ApiService) : this() {
         this.apiService = apiService

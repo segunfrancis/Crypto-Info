@@ -12,6 +12,9 @@ import com.project.segunfrancis.fixaslabchallenge.database.CryptoRoomDatabase
 import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
 import com.project.segunfrancis.fixaslabchallenge.repository.CryptoRepository
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * Created by SegunFrancis
