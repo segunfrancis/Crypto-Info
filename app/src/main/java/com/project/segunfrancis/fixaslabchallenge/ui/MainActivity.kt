@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var repository: CryptoRepository
     private lateinit var apiService: ApiService
     private lateinit var cryptoViewModel: CryptoViewModel
-    private val TAG = MainActivity().localClassName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                         displaySnackbar(getString(R.string.snackbar_error_message_cache))
                     }
                 })
-                Log.d(TAG, "onFailure: ${t.localizedMessage}")
+                Log.d("MainActivity", "onFailure: ${t.localizedMessage}")
             }
         })
     }
