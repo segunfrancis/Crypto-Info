@@ -35,7 +35,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.core:core-ktx:1.2.0'
 
     // Testing
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -45,6 +45,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit-ktx:$jUnitVersion_ktx"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "androidx.arch.core:core-testing:$coreTestingVersion"
+    // Mockito
+    testImplementation "org.mockito:mockito-core:3.2.0"
+    androidTestImplementation "org.mockito:mockito-android:3.2.0"
 
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
@@ -58,9 +61,7 @@ dependencies {
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
-
-    // ViewModel Kotlin support
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01"
 
     // Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"

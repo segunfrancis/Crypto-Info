@@ -10,9 +10,9 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "crypto_table")
 data class ApiResponse(
-    @PrimaryKey @SerializedName("id") val id: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("symbol") val symbol: String,
-    @SerializedName("price_usd") val priceUsd: String,
-    @SerializedName("percent_change_1h") val percentageChange1Hour: String
+    @PrimaryKey @SerializedName("id") var id: String,
+    @SerializedName("name") var name: String,
+    @SerializedName("symbol") var symbol: String,
+    @SerializedName("price_usd") var priceUsd: String,
+    @SerializedName("percent_change_1h") var percentageChange1Hour: String
 )

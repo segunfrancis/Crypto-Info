@@ -5,35 +5,69 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.project.segunfrancis.fixaslabchallenge.api.ApiBuilder
-import com.project.segunfrancis.fixaslabchallenge.api.ApiService
-import com.project.segunfrancis.fixaslabchallenge.database.CryptoDao
-import com.project.segunfrancis.fixaslabchallenge.database.CryptoRoomDatabase
+import com.project.segunfrancis.fixaslabchallenge.dataSource.DataRepository
+import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiBuilder
+import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiService
+import com.project.segunfrancis.fixaslabchallenge.dataSource.local.CryptoDao
+import com.project.segunfrancis.fixaslabchallenge.dataSource.local.CryptoRoomDatabase
+import com.project.segunfrancis.fixaslabchallenge.dataSource.local.Local
+import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.Remote
 import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
 import com.project.segunfrancis.fixaslabchallenge.repository.CryptoRepository
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.project.segunfrancis.fixaslabchallenge.useCases.GetLocalData
+import com.project.segunfrancis.fixaslabchallenge.useCases.GetRemoteData
+import com.project.segunfrancis.fixaslabchallenge.useCases.SetLocalData
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by SegunFrancis
  */
 
 class CryptoViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: CryptoRepository
+
+    private val cryptoViewModel = Job()
+
+    //private val repository: CryptoRepository
     private val cryptoDao: CryptoDao
     private val apiService: ApiService
-    var cryptoList: LiveData<List<ApiResponse>> = MutableLiveData()
+    private val dataRepo: DataRepository
+    private val localData: GetLocalData
+    private val remoteData: GetRemoteData
+    private val setLocal: SetLocalData
+    //var cryptoList: LiveData<List<ApiResponse>> = MutableLiveData()
 
     init {
         cryptoDao = CryptoRoomDatabase.getDatabase(application).cryptoDao()
-        apiService = ApiBuilder.retrofit.create(ApiService::class.java)
-        repository = CryptoRepository(cryptoDao)
-        cryptoList = repository.getCryptoList()
+        apiService = ApiBuilder.retrofit.create(
+            ApiService::class.java)
+//        repository = CryptoRepository(cryptoDao)
+//        cryptoList = repository.getCryptoList()
+
+        dataRepo = DataRepository(Local(cryptoDao), Remote(apiService))
+        localData = GetLocalData(dataRepo)
+        remoteData = GetRemoteData(dataRepo)
+        setLocal = SetLocalData(dataRepo)
     }
 
-    fun insertCryptoList(responseList: List<ApiResponse?>) = viewModelScope.launch {
+/*    fun insertCryptoList(responseList: List<ApiResponse?>) = viewModelScope.launch {
         repository.insertCryptoList(responseList)
+    }*/
+
+    fun getCryptoListFromLocal(): LiveData<List<ApiResponse>> {
+        return localData.getDataFromLocal()
+    }
+
+    fun getCryptoListFromRemote(): List<ApiResponse>? {
+        return remoteData.getDataFromRemote()
+    }
+
+    fun setCryptoListFromRemote(responseList: List<ApiResponse>?) = viewModelScope.launch {
+        setLocal.setDataToLocal(responseList)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cryptoViewModel.cancel()
     }
 }

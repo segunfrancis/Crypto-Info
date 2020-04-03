@@ -1,8 +1,8 @@
 package com.project.segunfrancis.fixaslabchallenge.repository
 
 import androidx.lifecycle.LiveData
-import com.project.segunfrancis.fixaslabchallenge.api.ApiService
-import com.project.segunfrancis.fixaslabchallenge.database.CryptoDao
+import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiService
+import com.project.segunfrancis.fixaslabchallenge.dataSource.local.CryptoDao
 import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
 import retrofit2.Call
 

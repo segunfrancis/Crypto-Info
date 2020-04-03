@@ -1,4 +1,4 @@
-package com.project.segunfrancis.fixaslabchallenge.api
+package com.project.segunfrancis.fixaslabchallenge.dataSource.remote
 
 import com.project.segunfrancis.fixaslabchallenge.util.AppConstants.BASE_URL
 import retrofit2.Retrofit

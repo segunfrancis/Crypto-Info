@@ -1,4 +1,4 @@
-package com.project.segunfrancis.fixaslabchallenge.database
+package com.project.segunfrancis.fixaslabchallenge.dataSource.local
 
 import android.content.Context
 import androidx.room.Database
@@ -19,7 +19,8 @@ abstract class CryptoRoomDatabase : RoomDatabase() {
         private var INSTANCE: CryptoRoomDatabase? = null
 
         fun getDatabase(context: Context): CryptoRoomDatabase {
-            val tempInstance = INSTANCE
+            val tempInstance =
+                INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }

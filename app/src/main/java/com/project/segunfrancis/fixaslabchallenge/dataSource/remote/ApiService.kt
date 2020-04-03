@@ -1,4 +1,4 @@
-package com.project.segunfrancis.fixaslabchallenge.api
+package com.project.segunfrancis.fixaslabchallenge.dataSource.remote
 
 import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
 import retrofit2.Call

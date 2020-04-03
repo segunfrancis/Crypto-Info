@@ -1,4 +1,4 @@
-package com.project.segunfrancis.fixaslabchallenge.database
+package com.project.segunfrancis.fixaslabchallenge.dataSource.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
