@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.project.segunfrancis.fixaslabchallenge.R
-import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
+import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
 import kotlinx.android.synthetic.main.crypto_coin_list_item.view.*
 import java.util.*
 
@@ -15,7 +15,7 @@ import java.util.*
 
 class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
-    private var coinList: List<ApiResponse>? = ArrayList()
+    private var coinList: List<BaseResponse>? = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         return CryptoViewHolder(
@@ -29,26 +29,26 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
     override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) =
         holder.bind(coinList?.get(position))
 
-    fun setData(coinList: List<ApiResponse>?) {
+    fun setData(coinList: List<BaseResponse>?) {
         this.coinList = coinList
         notifyDataSetChanged()
     }
 
     class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: ApiResponse?) = with(itemView) {
+        fun bind(item: BaseResponse?) = with(itemView) {
             coin_name.text = item?.name
-            coin_price.text = "$".plus(item?.priceUsd)
+            coin_price.text = "$".plus(item?.quote?.USD?.price)
             coin_symbol.text = item?.symbol
             when {
-                item?.percentageChange1Hour!!.toDouble() < 0 -> {
-                    coin_percent_change.text = item.percentageChange1Hour.plus("%")
+                item!!.quote.USD.percent_change_1h < 0 -> {
+                    coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
                     coin_percent_change.setTextColor(resources.getColor(R.color.textRed))
                 }
-                item.percentageChange1Hour.toDouble() > 0 -> {
-                    coin_percent_change.text = item.percentageChange1Hour.plus("%")
+                item.quote.USD.percent_change_1h > 0 -> {
+                    coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
                     coin_percent_change.setTextColor(resources.getColor(R.color.colorAccent))
                 }
-                else -> coin_percent_change.text = item.percentageChange1Hour.plus("%")
+                else -> coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
             }
         }
     }

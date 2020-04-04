@@ -36,9 +36,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // Testing
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestImplementation "androidx.test:core:$testRunnerVersion"
@@ -69,4 +69,7 @@ dependencies {
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
+    // Gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
 }

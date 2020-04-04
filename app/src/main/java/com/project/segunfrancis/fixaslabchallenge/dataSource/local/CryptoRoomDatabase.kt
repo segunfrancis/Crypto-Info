@@ -4,13 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.project.segunfrancis.fixaslabchallenge.model.ApiResponse
+import androidx.room.TypeConverters
+import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
 
 /**
  * Created by SegunFrancis
  */
 
-@Database(entities = [ApiResponse::class], exportSchema = false, version = 1)
+@Database(entities = [BaseResponse::class], exportSchema = false, version = 1)
+@TypeConverters(Converters::class)
 abstract class CryptoRoomDatabase : RoomDatabase() {
     abstract fun cryptoDao(): CryptoDao
 
