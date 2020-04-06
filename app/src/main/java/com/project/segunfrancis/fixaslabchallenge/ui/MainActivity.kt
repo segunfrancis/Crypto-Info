@@ -23,42 +23,17 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         setContentView(R.layout.activity_main)
         swipeRefresh.isRefreshing = true
 
-        val adapter = CryptoAdapter()
-        recyclerView.adapter = adapter
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
-
-        // Gets remote data and stores it in local database
         cryptoViewModel.getCryptoListFromRemote()
-
-        cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
-            //adapter.setData(it)
-            swipeRefresh.isRefreshing = false
-        })
+        loadDataToView()
         swipeRefresh.setOnRefreshListener(this)
-
-        cryptoViewModel.responseData.observe(this, Observer {
-            when (it.status) {
-                ResourceState.LOADING -> swipeRefresh.isRefreshing = true
-                ResourceState.SUCCESS -> {
-                    displaySnackbar(it.message!!)
-                    adapter.setData(it.data?.data)
-                    swipeRefresh.isRefreshing = false
-                }
-                ResourceState.ERROR -> {
-                    displaySnackbar(it.message!!)
-                    Log.e("MainActivity", "Error loading data", it.throwable)
-                    swipeRefresh.isRefreshing = false
-                }
-            }
-        })
     }
 
     /**
      * Called when a swipe gesture triggers a refresh.
      */
     override fun onRefresh() {
-        cryptoViewModel.getCryptoListFromRemote()
-        swipeRefresh.isRefreshing = false
+        loadDataToView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,7 +43,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_refresh) {
-            //swipeRefresh.isRefreshing = true
+            loadDataToView()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -76,5 +51,26 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun displaySnackbar(message: String) {
         Snackbar.make(findViewById(R.id.root), message, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun loadDataToView() {
+        val adapter = CryptoAdapter()
+        recyclerView.adapter = adapter
+        // Gets remote data and stores it in local database
+        cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
+            when (it?.status) {
+                ResourceState.LOADING -> swipeRefresh.isRefreshing = true
+                ResourceState.SUCCESS -> {
+                    displaySnackbar(it.message!!)
+                    adapter.setData(it.data)
+                    swipeRefresh.isRefreshing = false
+                }
+                ResourceState.ERROR -> {
+                    displaySnackbar(it.message!!)
+                    Log.e("MainActivity", "Error loading data", it.throwable)
+                    swipeRefresh.isRefreshing = false
+                }
+            }
+        })
     }
 }

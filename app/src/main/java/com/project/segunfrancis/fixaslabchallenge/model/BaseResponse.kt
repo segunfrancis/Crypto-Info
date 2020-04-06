@@ -11,13 +11,9 @@ data class BaseResponse(
     val cmc_rank: Int,
     val date_added: String,
     val last_updated: String,
-    //val max_supply: Any,
     val name: String,
     val num_market_pairs: Int,
-    //val platform: Platform,
     val quote: Quote,
     val slug: String,
     val symbol: String
-    //val tags: List<Any>,
-    //val total_supply: Int
 )

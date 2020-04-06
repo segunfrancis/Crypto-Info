@@ -13,10 +13,11 @@ import retrofit2.Response
 /**
  * Created by SegunFrancis
  */
-class Remote(private val service: ApiService, private val dao: CryptoDao) : RemoteSource {
+class Remote(private val service: ApiService) : RemoteSource {
     private var responseList: List<BaseResponse> = ArrayList()
-    override fun getRemoteData() {
-        service.getCryptoCoins().enqueue(object : Callback<ResponseData?> {
+    override fun getRemoteData(): Call<ResponseData> {
+        return service.getCryptoCoins()
+        /*service.getCryptoCoins().enqueue(object : Callback<ResponseData?> {
             override fun onResponse(
                 call: Call<ResponseData?>,
                 response: Response<ResponseData?>
@@ -29,6 +30,6 @@ class Remote(private val service: ApiService, private val dao: CryptoDao) : Remo
             override fun onFailure(call: Call<ResponseData?>, t: Throwable) {
                 Log.e("Remote", t.localizedMessage!!)
             }
-        })
+        })*/
     }
 }
