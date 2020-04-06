@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.project.segunfrancis.fixaslabchallenge.R
 import com.project.segunfrancis.fixaslabchallenge.adapter.CryptoAdapter
+import com.project.segunfrancis.fixaslabchallenge.util.ResourceState
 import com.project.segunfrancis.fixaslabchallenge.viewModel.CryptoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,10 +31,26 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         cryptoViewModel.getCryptoListFromRemote()
 
         cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
-            adapter.setData(it)
+            //adapter.setData(it)
             swipeRefresh.isRefreshing = false
         })
         swipeRefresh.setOnRefreshListener(this)
+
+        cryptoViewModel.responseData.observe(this, Observer {
+            when (it.status) {
+                ResourceState.LOADING -> swipeRefresh.isRefreshing = true
+                ResourceState.SUCCESS -> {
+                    displaySnackbar(it.message!!)
+                    adapter.setData(it.data?.data)
+                    swipeRefresh.isRefreshing = false
+                }
+                ResourceState.ERROR -> {
+                    displaySnackbar(it.message!!)
+                    Log.e("MainActivity", "Error loading data", it.throwable)
+                    swipeRefresh.isRefreshing = false
+                }
+            }
+        })
     }
 
     /**
