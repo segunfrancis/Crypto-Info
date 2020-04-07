@@ -2,7 +2,6 @@ package com.project.segunfrancis.fixaslabchallenge.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
@@ -26,6 +25,21 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
         cryptoViewModel.getCryptoListFromRemote()
         loadDataToView()
+        cryptoViewModel.responseMessage.observe(this, Observer {
+            when(it.status) {
+                ResourceState.LOADING -> {
+                    swipeRefresh.isRefreshing = true
+                }
+                ResourceState.SUCCESS -> {
+                    swipeRefresh.isRefreshing = false
+                    displaySnackbar(it.message!!)
+                }
+                ResourceState.ERROR -> {
+                    swipeRefresh.isRefreshing = false
+                    displaySnackbar(it.message!!)
+                }
+            }
+        })
         swipeRefresh.setOnRefreshListener(this)
     }
 
@@ -33,7 +47,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
      * Called when a swipe gesture triggers a refresh.
      */
     override fun onRefresh() {
-        loadDataToView()
+        cryptoViewModel.getCryptoListFromRemote()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -43,7 +57,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_refresh) {
-            loadDataToView()
+            cryptoViewModel.getCryptoListFromRemote()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -58,19 +72,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView.adapter = adapter
         // Gets remote data and stores it in local database
         cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
-            when (it?.status) {
-                ResourceState.LOADING -> swipeRefresh.isRefreshing = true
-                ResourceState.SUCCESS -> {
-                    displaySnackbar(it.message!!)
-                    adapter.setData(it.data)
-                    swipeRefresh.isRefreshing = false
-                }
-                ResourceState.ERROR -> {
-                    displaySnackbar(it.message!!)
-                    Log.e("MainActivity", "Error loading data", it.throwable)
-                    swipeRefresh.isRefreshing = false
-                }
-            }
+            adapter.setData(it)
         })
     }
 }

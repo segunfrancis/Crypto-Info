@@ -6,8 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
-import com.project.segunfrancis.fixaslabchallenge.model.ResponseData
-import com.project.segunfrancis.fixaslabchallenge.util.Resource
 
 /**
  * Created by SegunFrancis
@@ -16,8 +14,8 @@ import com.project.segunfrancis.fixaslabchallenge.util.Resource
 @Dao
 interface CryptoDao {
     @Query("SELECT * FROM crypto_table")
-    fun getCryptoList(): LiveData<Resource<List<BaseResponse>>?>
+    fun getCryptoList(): LiveData<List<BaseResponse>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCryptoList(responseList: Resource<List<BaseResponse>>?)
+    suspend fun insertCryptoList(responseList: List<BaseResponse>?)
 }

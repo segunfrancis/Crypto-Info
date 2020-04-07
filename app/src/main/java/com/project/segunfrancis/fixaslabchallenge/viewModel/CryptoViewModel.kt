@@ -1,8 +1,10 @@
 package com.project.segunfrancis.fixaslabchallenge.viewModel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.project.segunfrancis.fixaslabchallenge.dataSource.DataRepository
 import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiBuilder
@@ -37,6 +39,7 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
     private val localData: GetLocalData
     private val remoteData: GetRemoteData
     private val setLocal: SetLocalData
+    val responseMessage = MutableLiveData<Resource<ResponseData>>()
 
     init {
         cryptoDao = CryptoRoomDatabase.getDatabase(application).cryptoDao()
@@ -50,12 +53,12 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
         setLocal = SetLocalData(dataRepo)
     }
 
-    fun getCryptoListFromLocal(): LiveData<Resource<List<BaseResponse>>?> {
+    fun getCryptoListFromLocal(): LiveData<List<BaseResponse>> {
         return localData.getDataFromLocal()
     }
 
     fun getCryptoListFromRemote() {
-        setCryptoListFromRemote(
+        responseMessage.postValue(
             Resource(
                 status = ResourceState.LOADING,
                 message = "Loading..."
@@ -63,26 +66,28 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
         )
         remoteData.getDataFromRemote().enqueue(object : Callback<ResponseData?> {
             override fun onResponse(call: Call<ResponseData?>, response: Response<ResponseData?>) {
-                setCryptoListFromRemote(Resource(
-                    status = ResourceState.SUCCESS,
-                    message = "Success",
-                    data = response.body()?.data
-                ))
+                responseMessage.postValue(
+                    Resource(
+                        status = ResourceState.SUCCESS,
+                        message = "Success"
+                    )
+                )
+                setCryptoListFromRemote(response.body()!!.data)
             }
 
             override fun onFailure(call: Call<ResponseData?>, t: Throwable) {
-                setCryptoListFromRemote(
+                responseMessage.postValue(
                     Resource(
                         status = ResourceState.ERROR,
-                        message = "Check Network Connection",
-                        throwable = t
+                        message = "Check Network Connection"
                     )
                 )
+                Log.e("CryptoViewModel", t.localizedMessage!!)
             }
         })
     }
 
-    fun setCryptoListFromRemote(responseList: Resource<List<BaseResponse>>?) = viewModelScope.launch {
+    fun setCryptoListFromRemote(responseList: List<BaseResponse>?) = viewModelScope.launch {
         setLocal.setDataToLocal(responseList)
     }
 
