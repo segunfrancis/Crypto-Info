@@ -3,9 +3,7 @@ package com.project.segunfrancis.fixaslabchallenge.dataSource.local
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
 import com.project.segunfrancis.fixaslabchallenge.model.Quote
-import com.project.segunfrancis.fixaslabchallenge.util.Resource
 
 /**
  * Created by SegunFrancis

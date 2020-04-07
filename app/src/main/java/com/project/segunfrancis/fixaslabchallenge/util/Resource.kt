@@ -3,6 +3,7 @@ package com.project.segunfrancis.fixaslabchallenge.util
 /**
  * Created by SegunFrancis
  */
+
 class Resource<out T> constructor(
     val status: ResourceState,
     val data: T? = null,
