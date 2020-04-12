@@ -2,6 +2,7 @@ package com.project.segunfrancis.fixaslabchallenge.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "crypto_table")
 data class BaseResponse(
@@ -16,4 +17,4 @@ data class BaseResponse(
     val quote: Quote,
     val slug: String,
     val symbol: String
-)
+): Serializable

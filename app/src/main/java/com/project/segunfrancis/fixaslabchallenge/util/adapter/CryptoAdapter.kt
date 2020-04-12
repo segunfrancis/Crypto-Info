@@ -1,4 +1,4 @@
-package com.project.segunfrancis.fixaslabchallenge.adapter
+package com.project.segunfrancis.fixaslabchallenge.util.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import java.util.*
  * Created by SegunFrancis
  */
 
-class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
+class CryptoAdapter(private val listener: OnCryptoItemClickListener) : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
     private var coinList: List<BaseResponse>? = ArrayList()
 
@@ -27,15 +27,19 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
     override fun getItemCount() = coinList!!.size
 
     override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) =
-        holder.bind(coinList?.get(position))
+        holder.bind(coinList?.get(position), listener)
 
     fun setData(coinList: List<BaseResponse>?) {
         this.coinList = coinList
         notifyDataSetChanged()
     }
 
-    class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: BaseResponse?) = with(itemView) {
+    interface OnCryptoItemClickListener {
+        fun onClick(item: BaseResponse)
+    }
+
+    open class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(item: BaseResponse?, listener: OnCryptoItemClickListener) = with(itemView) {
             coin_name.text = item?.name
             coin_price.text = "$".plus(item?.quote?.USD?.price)
             coin_symbol.text = item?.symbol
@@ -49,6 +53,9 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
                     coin_percent_change.setTextColor(resources.getColor(R.color.colorAccent))
                 }
                 else -> coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
+            }
+            itemView.setOnClickListener {
+                listener.onClick(item)
             }
         }
     }

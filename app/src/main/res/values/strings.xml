@@ -2,4 +2,7 @@
     <string name="app_name">Fixas Lab Challenge</string>
     <string name="snackbar_error_message_cache">Displaying cached data, check network connection</string>
     <string name="snackbar_error_message">Check network connection</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
