@@ -11,9 +11,6 @@ import retrofit2.Call
  * Created by SegunFrancis
  */
 class DataRepository(private val local: LocalSource, private val remote: RemoteSource) {
-    fun getLocalData(): LiveData<List<BaseResponse>> {
-        return local.getLocalData()
-    }
 
     fun getRemoteData(): Call<ResponseData> {
         return remote.getRemoteData()
@@ -21,5 +18,9 @@ class DataRepository(private val local: LocalSource, private val remote: RemoteS
 
     suspend fun setLocalData(responseList: List<BaseResponse>?) {
         local.setLocalData(responseList)
+    }
+
+    fun getSearchResults(query: String?): LiveData<List<BaseResponse>> {
+        return local.getSearchResults("%$query%")
     }
 }

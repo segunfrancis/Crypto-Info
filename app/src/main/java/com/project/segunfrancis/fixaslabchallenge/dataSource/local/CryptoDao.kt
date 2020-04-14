@@ -13,9 +13,9 @@ import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
 
 @Dao
 interface CryptoDao {
-    @Query("SELECT * FROM crypto_table")
-    fun getCryptoList(): LiveData<List<BaseResponse>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCryptoList(responseList: List<BaseResponse>?)
+
+    @Query("SELECT * FROM crypto_table WHERE name LIKE :query")
+    fun search(query: String?): LiveData<List<BaseResponse>>
 }

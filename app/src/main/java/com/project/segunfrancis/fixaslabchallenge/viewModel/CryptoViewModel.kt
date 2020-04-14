@@ -2,10 +2,7 @@ package com.project.segunfrancis.fixaslabchallenge.viewModel
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.project.segunfrancis.fixaslabchallenge.dataSource.DataRepository
 import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiBuilder
 import com.project.segunfrancis.fixaslabchallenge.dataSource.remote.ApiService
@@ -18,6 +15,7 @@ import com.project.segunfrancis.fixaslabchallenge.model.ResponseData
 import com.project.segunfrancis.fixaslabchallenge.useCases.GetLocalData
 import com.project.segunfrancis.fixaslabchallenge.useCases.GetRemoteData
 import com.project.segunfrancis.fixaslabchallenge.useCases.SetLocalData
+import com.project.segunfrancis.fixaslabchallenge.util.CryptoMediatorLiveData
 import com.project.segunfrancis.fixaslabchallenge.util.Resource
 import com.project.segunfrancis.fixaslabchallenge.util.ResourceState
 import kotlinx.coroutines.*
@@ -33,19 +31,19 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
 
     private val cryptoViewModel = Job()
 
-    private val cryptoDao: CryptoDao
-    private val apiService: ApiService
+    private val cryptoDao: CryptoDao = CryptoRoomDatabase.getDatabase(application).cryptoDao()
+    private val apiService: ApiService = ApiBuilder.retrofit.create(
+        ApiService::class.java
+    )
     private val dataRepo: DataRepository
     private val localData: GetLocalData
     private val remoteData: GetRemoteData
     private val setLocal: SetLocalData
     val responseMessage = MutableLiveData<Resource<ResponseData>>()
+    private val _searchQuery = MutableLiveData("")
+    private val coins: LiveData<List<BaseResponse>>
 
     init {
-        cryptoDao = CryptoRoomDatabase.getDatabase(application).cryptoDao()
-        apiService = ApiBuilder.retrofit.create(
-            ApiService::class.java
-        )
 
         dataRepo = DataRepository(Local(cryptoDao), Remote(apiService))
         localData = GetLocalData(dataRepo)
@@ -53,10 +51,14 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
         setLocal = SetLocalData(dataRepo)
 
         getCryptoListFromRemote()
+
+        coins = Transformations.switchMap(CryptoMediatorLiveData(_searchQuery)) {
+            localData.getSearchResults(it)
+        }
     }
 
     fun getCryptoListFromLocal(): LiveData<List<BaseResponse>> {
-        return localData.getDataFromLocal()
+        return coins
     }
 
     fun getCryptoListFromRemote() {
@@ -91,6 +93,10 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setCryptoListFromRemote(responseList: List<BaseResponse>?) = viewModelScope.launch {
         setLocal.setDataToLocal(responseList)
+    }
+
+    fun searchCoins(query: String?) {
+        _searchQuery.value = query
     }
 
     override fun onCleared() {

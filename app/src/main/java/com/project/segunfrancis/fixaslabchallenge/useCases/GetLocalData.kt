@@ -8,7 +8,8 @@ import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
  * Created by SegunFrancis
  */
 class GetLocalData(private val dataRepo: DataRepository) {
-    fun getDataFromLocal(): LiveData<List<BaseResponse>> {
-        return dataRepo.getLocalData()
+
+    fun getSearchResults(query: String?): LiveData<List<BaseResponse>> {
+        return dataRepo.getSearchResults(query)
     }
 }
