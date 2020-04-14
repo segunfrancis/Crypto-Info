@@ -4,18 +4,18 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.project.segunfrancis.fixaslabchallenge.R
 import com.project.segunfrancis.fixaslabchallenge.model.BaseResponse
 import kotlinx.android.synthetic.main.crypto_coin_list_item.view.*
-import java.util.*
 
 /**
  * Created by SegunFrancis
  */
 
-class CryptoAdapter(private val listener: OnCryptoItemClickListener) : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
-
-    private var coinList: List<BaseResponse>? = ArrayList()
+class CryptoAdapter(private val listener: OnCryptoItemClickListener) :
+    ListAdapter<BaseResponse, CryptoAdapter.CryptoViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         return CryptoViewHolder(
@@ -24,21 +24,15 @@ class CryptoAdapter(private val listener: OnCryptoItemClickListener) : RecyclerV
         )
     }
 
-    override fun getItemCount() = coinList!!.size
-
-    override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) =
-        holder.bind(coinList?.get(position), listener)
-
-    fun setData(coinList: List<BaseResponse>?) {
-        this.coinList = coinList
-        notifyDataSetChanged()
+    override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) {
+        holder.bind(getItem(position), listener)
     }
 
     interface OnCryptoItemClickListener {
         fun onClick(item: BaseResponse)
     }
 
-    open class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: BaseResponse?, listener: OnCryptoItemClickListener) = with(itemView) {
             coin_name.text = item?.name
             coin_price.text = "$".plus(item?.quote?.USD?.price)
@@ -57,6 +51,16 @@ class CryptoAdapter(private val listener: OnCryptoItemClickListener) : RecyclerV
             itemView.setOnClickListener {
                 listener.onClick(item)
             }
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<BaseResponse>() {
+        override fun areItemsTheSame(oldItem: BaseResponse, newItem: BaseResponse): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: BaseResponse, newItem: BaseResponse): Boolean {
+            return oldItem.equals(newItem)
         }
     }
 }

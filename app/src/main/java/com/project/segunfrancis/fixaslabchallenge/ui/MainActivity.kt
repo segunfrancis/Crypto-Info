@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -28,7 +29,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         swipeRefresh.isRefreshing = true
 
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
-        cryptoViewModel.getCryptoListFromRemote()
         loadDataToView()
         cryptoViewModel.responseMessage.observe(this, Observer {
             when (it.status) {
@@ -57,6 +57,17 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        val searchView = menu?.findItem(R.id.menu_search)?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
         return true
     }
 
@@ -79,12 +90,11 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun loadDataToView() {
-        val adapter =
-            CryptoAdapter(this)
-        recyclerView.adapter = adapter
+        val adapter = CryptoAdapter(this)
         // Gets remote data and stores it in local database
         cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
-            adapter.setData(it)
+            adapter.submitList(it)
         })
+        recyclerView.adapter = adapter
     }
 }

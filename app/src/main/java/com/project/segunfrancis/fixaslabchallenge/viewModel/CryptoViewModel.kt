@@ -51,6 +51,8 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
         localData = GetLocalData(dataRepo)
         remoteData = GetRemoteData(dataRepo)
         setLocal = SetLocalData(dataRepo)
+
+        getCryptoListFromRemote()
     }
 
     fun getCryptoListFromLocal(): LiveData<List<BaseResponse>> {
