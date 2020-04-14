@@ -24,22 +24,29 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        swipeRefresh.isRefreshing = true
 
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
+
+        cryptoViewModel.isRefreshing.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                swipeRefresh.isRefreshing = it
+            }
+        })
         loadDataToView()
-        cryptoViewModel.responseMessage.observe(this, Observer {
-            when (it.status) {
-                ResourceState.LOADING -> {
-                    swipeRefresh.isRefreshing = true
-                }
-                ResourceState.SUCCESS -> {
-                    swipeRefresh.isRefreshing = false
-                    displaySnackbar(it.message!!)
-                }
-                ResourceState.ERROR -> {
-                    swipeRefresh.isRefreshing = false
-                    displaySnackbar(it.message!!)
+        cryptoViewModel.responseMessage.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                when (it.status) {
+                    ResourceState.LOADING -> {
+                        swipeRefresh.isRefreshing = true
+                    }
+                    ResourceState.SUCCESS -> {
+                        swipeRefresh.isRefreshing = false
+                        displaySnackbar(it.message!!)
+                    }
+                    ResourceState.ERROR -> {
+                        swipeRefresh.isRefreshing = false
+                        displaySnackbar(it.message!!)
+                    }
                 }
             }
         })
@@ -59,7 +66,6 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         val searchView = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 return false
             }
 

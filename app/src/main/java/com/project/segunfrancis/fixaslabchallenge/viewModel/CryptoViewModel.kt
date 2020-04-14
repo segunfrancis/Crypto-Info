@@ -16,6 +16,7 @@ import com.project.segunfrancis.fixaslabchallenge.useCases.GetLocalData
 import com.project.segunfrancis.fixaslabchallenge.useCases.GetRemoteData
 import com.project.segunfrancis.fixaslabchallenge.useCases.SetLocalData
 import com.project.segunfrancis.fixaslabchallenge.util.CryptoMediatorLiveData
+import com.project.segunfrancis.fixaslabchallenge.util.Event
 import com.project.segunfrancis.fixaslabchallenge.util.Resource
 import com.project.segunfrancis.fixaslabchallenge.util.ResourceState
 import kotlinx.coroutines.*
@@ -29,8 +30,6 @@ import retrofit2.Response
 
 class CryptoViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val cryptoViewModel = Job()
-
     private val cryptoDao: CryptoDao = CryptoRoomDatabase.getDatabase(application).cryptoDao()
     private val apiService: ApiService = ApiBuilder.retrofit.create(
         ApiService::class.java
@@ -39,9 +38,10 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
     private val localData: GetLocalData
     private val remoteData: GetRemoteData
     private val setLocal: SetLocalData
-    val responseMessage = MutableLiveData<Resource<ResponseData>>()
+    val responseMessage = MutableLiveData<Event<Resource<ResponseData>>>()
     private val _searchQuery = MutableLiveData("")
     private val coins: LiveData<List<BaseResponse>>
+    val isRefreshing = MutableLiveData<Event<Boolean>>()
 
     init {
 
@@ -49,7 +49,7 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
         localData = GetLocalData(dataRepo)
         remoteData = GetRemoteData(dataRepo)
         setLocal = SetLocalData(dataRepo)
-
+        isRefreshing.value = Event(false)
         getCryptoListFromRemote()
 
         coins = Transformations.switchMap(CryptoMediatorLiveData(_searchQuery)) {
@@ -63,17 +63,21 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getCryptoListFromRemote() {
         responseMessage.postValue(
-            Resource(
-                status = ResourceState.LOADING,
-                message = "Loading..."
+            Event(
+                Resource(
+                    status = ResourceState.LOADING,
+                    message = "Loading..."
+                )
             )
         )
         remoteData.getDataFromRemote().enqueue(object : Callback<ResponseData?> {
             override fun onResponse(call: Call<ResponseData?>, response: Response<ResponseData?>) {
                 responseMessage.postValue(
-                    Resource(
-                        status = ResourceState.SUCCESS,
-                        message = "Success"
+                    Event(
+                        Resource(
+                            status = ResourceState.SUCCESS,
+                            message = "Success"
+                        )
                     )
                 )
                 setCryptoListFromRemote(response.body()!!.data)
@@ -81,9 +85,11 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
 
             override fun onFailure(call: Call<ResponseData?>, t: Throwable) {
                 responseMessage.postValue(
-                    Resource(
-                        status = ResourceState.ERROR,
-                        message = "Check Network Connection"
+                    Event(
+                        Resource(
+                            status = ResourceState.ERROR,
+                            message = "Check Network Connection"
+                        )
                     )
                 )
                 Log.e("CryptoViewModel", t.localizedMessage!!)
@@ -97,10 +103,5 @@ class CryptoViewModel(application: Application) : AndroidViewModel(application) 
 
     fun searchCoins(query: String?) {
         _searchQuery.value = query
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cryptoViewModel.cancel()
     }
 }
