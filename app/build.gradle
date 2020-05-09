@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.project.segunfrancis.crypto_info"
         minSdkVersion 19
@@ -61,7 +61,7 @@ dependencies {
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha02"
 
     // Coroutines
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"

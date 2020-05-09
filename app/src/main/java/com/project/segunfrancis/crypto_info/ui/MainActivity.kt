@@ -14,6 +14,7 @@ import com.project.segunfrancis.crypto_info.R
 import com.project.segunfrancis.crypto_info.model.BaseResponse
 import com.project.segunfrancis.crypto_info.util.adapter.CryptoAdapter
 import com.project.segunfrancis.crypto_info.util.ResourceState
+import com.project.segunfrancis.crypto_info.util.adapter.MarginItemDecoration
 import com.project.segunfrancis.crypto_info.viewModel.CryptoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -101,6 +102,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         cryptoViewModel.getCryptoListFromLocal().observe(this, Observer {
             adapter.submitList(it)
         })
+        recyclerView.addItemDecoration(MarginItemDecoration(20))
         recyclerView.adapter = adapter
     }
 }

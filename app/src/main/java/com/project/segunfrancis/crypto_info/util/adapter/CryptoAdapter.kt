@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.project.segunfrancis.crypto_info.R
@@ -35,18 +36,18 @@ class CryptoAdapter(private val listener: OnCryptoItemClickListener) :
     class CryptoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: BaseResponse?, listener: OnCryptoItemClickListener) = with(itemView) {
             coin_name.text = item?.name
-            coin_price.text = "$".plus(item?.quote?.USD?.price)
+            coin_price.text = "$".plus(String.format("%.5f", item?.quote?.USD?.price))
             coin_symbol.text = item?.symbol
             when {
                 item!!.quote.USD.percent_change_1h < 0 -> {
-                    coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
-                    coin_percent_change.setTextColor(resources.getColor(R.color.textRed))
+                    coin_percent_change.text =  "${String.format("%.4f", item.quote.USD.percent_change_1h)}%"
+                    coin_percent_change.setTextColor(ContextCompat.getColor(context, R.color.textRed))
                 }
                 item.quote.USD.percent_change_1h > 0 -> {
-                    coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
-                    coin_percent_change.setTextColor(resources.getColor(R.color.colorAccent))
+                    coin_percent_change.text = "${String.format("%.4f", item.quote.USD.percent_change_1h)}%"
+                    coin_percent_change.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
                 }
-                else -> coin_percent_change.text = "${item.quote.USD.percent_change_1h}%"
+                else -> coin_percent_change.text = "${String.format("%.4f", item.quote.USD.percent_change_1h)}%"
             }
             itemView.setOnClickListener {
                 listener.onClick(item)
