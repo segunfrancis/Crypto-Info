@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.fragment_crypto_detail.*
  */
 class CryptoDetailFragment : BottomSheetDialogFragment() {
 
+    override fun getTheme(): Int {
+        return R.style.BottomSheetMenuTheme
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
