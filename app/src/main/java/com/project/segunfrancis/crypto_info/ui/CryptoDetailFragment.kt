@@ -1,16 +1,21 @@
 package com.project.segunfrancis.crypto_info.ui
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
 import com.project.segunfrancis.crypto_info.R
 import com.project.segunfrancis.crypto_info.model.BaseResponse
 import kotlinx.android.synthetic.main.fragment_crypto_detail.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -88,5 +93,24 @@ class CryptoDetailFragment : BottomSheetDialogFragment() {
                     null
                 )
             )
+
+        /*val legend = line_chart.legend
+        legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        legend.orientation = Legend.LegendOrientation.VERTICAL
+        legend.setDrawInside(false)*/
+        line_chart.setDrawBorders(false)
+
+        val values = ArrayList<Entry>()
+        values.add(Entry(0F, coinItem.quote.USD.percent_change_1h.toFloat()))
+        values.add(Entry(1F, coinItem.quote.USD.percent_change_24h.toFloat()))
+        values.add(Entry(2F, coinItem.quote.USD.percent_change_7d.toFloat()))
+
+        val dataSet = LineDataSet(values, "Percentage Change")
+        dataSet.color = Color.GREEN
+        dataSet.valueTextColor = Color.DKGRAY
+
+        val lineData = LineData(dataSet)
+        line_chart.data = lineData
     }
 }

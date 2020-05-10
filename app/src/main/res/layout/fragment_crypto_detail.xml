@@ -1,81 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.CryptoDetailFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/bottomSheet_coin_name"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="BitCoin" />
+        tools:context=".ui.CryptoDetailFragment">
 
-    <TextView
-        android:id="@+id/bottomSheet_last_updated"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomSheet_coin_name"
-        tools:text="Last Updated" />
+        <TextView
+            android:id="@+id/bottomSheet_coin_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="BitCoin" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Percentage Change"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/bottomSheet_last_updated"
-        app:layout_constraintStart_toStartOf="@id/bottomSheet_last_updated"
-        app:layout_constraintTop_toBottomOf="@id/bottomSheet_last_updated" />
+        <TextView
+            android:id="@+id/bottomSheet_last_updated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheet_coin_name"
+            tools:text="Last Updated" />
 
-    <TextView
-        android:id="@+id/bottomSheet_1_hour"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:text="percentage change 1 hour" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Percentage Change"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/bottomSheet_last_updated"
+            app:layout_constraintStart_toStartOf="@id/bottomSheet_last_updated"
+            app:layout_constraintTop_toBottomOf="@id/bottomSheet_last_updated" />
 
-    <TextView
-        android:id="@+id/bottomSheet_24_hours"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="@+id/bottomSheet_1_hour"
-        app:layout_constraintStart_toStartOf="@+id/bottomSheet_1_hour"
-        app:layout_constraintTop_toBottomOf="@+id/bottomSheet_1_hour"
-        tools:text="percentage change 24 hours" />
+        <TextView
+            android:id="@+id/bottomSheet_1_hour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:text="percentage change 1 hour" />
 
-    <TextView
-        android:id="@+id/bottomSheet_7_days"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/bottomSheet_24_hours"
-        app:layout_constraintStart_toStartOf="@+id/bottomSheet_24_hours"
-        app:layout_constraintTop_toBottomOf="@+id/bottomSheet_24_hours"
-        tools:text="percentage change 7 days" />
+        <TextView
+            android:id="@+id/bottomSheet_24_hours"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="@+id/bottomSheet_1_hour"
+            app:layout_constraintStart_toStartOf="@+id/bottomSheet_1_hour"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheet_1_hour"
+            tools:text="percentage change 24 hours" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/bottomSheet_7_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintEnd_toEndOf="@+id/bottomSheet_24_hours"
+            app:layout_constraintStart_toStartOf="@+id/bottomSheet_24_hours"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheet_24_hours"
+            tools:text="percentage change 7 days" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottomSheet_7_days" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
