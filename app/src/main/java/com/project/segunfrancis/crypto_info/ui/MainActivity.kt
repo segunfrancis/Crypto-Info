@@ -24,14 +24,14 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     CryptoAdapter.OnCryptoItemClickListener {
     private lateinit var cryptoViewModel: CryptoViewModel
-    lateinit var scheduler: ScheduledThreadPoolExecutor
+    private lateinit var scheduler: ScheduledThreadPoolExecutor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         scheduler = Executors.newScheduledThreadPool(1) as ScheduledThreadPoolExecutor
-        scheduler.scheduleWithFixedDelay(LoadDataTask(), 15, 10, TimeUnit.SECONDS)
+        scheduler.scheduleWithFixedDelay(LoadDataTask(), 15, 30, TimeUnit.SECONDS)
 
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
 
