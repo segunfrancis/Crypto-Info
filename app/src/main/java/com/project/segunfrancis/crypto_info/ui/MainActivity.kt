@@ -17,14 +17,21 @@ import com.project.segunfrancis.crypto_info.util.ResourceState
 import com.project.segunfrancis.crypto_info.util.adapter.MarginItemDecoration
 import com.project.segunfrancis.crypto_info.viewModel.CryptoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     CryptoAdapter.OnCryptoItemClickListener {
     private lateinit var cryptoViewModel: CryptoViewModel
+    lateinit var scheduler: ScheduledThreadPoolExecutor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        scheduler = Executors.newScheduledThreadPool(1) as ScheduledThreadPoolExecutor
+        scheduler.scheduleWithFixedDelay(LoadDataTask(), 15, 10, TimeUnit.SECONDS)
 
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
 
@@ -104,5 +111,16 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         })
         recyclerView.addItemDecoration(MarginItemDecoration(20))
         recyclerView.adapter = adapter
+    }
+
+    inner class LoadDataTask : Runnable {
+        override fun run() {
+            cryptoViewModel.getCryptoListFromRemote()
+        }
+    }
+
+    override fun onDestroy() {
+        scheduler.shutdown()
+        super.onDestroy()
     }
 }
